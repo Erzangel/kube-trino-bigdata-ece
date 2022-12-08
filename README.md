@@ -18,6 +18,16 @@ We used a Virtual Machine hosted in a friend's server, running Ubuntu 22.04. The
 - RAM: 24 GB
 - Storage: 30 GB
 
+## Documentation index
+
+We have documented all of our attempts for each part of the project, which we have divided and documented as follows:
+
+- [0. Creating & provisioning VMs with Vagrant](./docs/0-vms.md)
+- 1. Deploying Kubernetes with kubeadm, kubelet, kubectl
+- 2. Deploying basic Kubernetes services (load balancer, Ingress)
+- 3. Deploying MinIO to provide object storage
+- 4. Deploying Trino to perform distributed computation
+
 ## Contributors
 
 | Name              | Email                       |
