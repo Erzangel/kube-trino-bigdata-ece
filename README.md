@@ -10,9 +10,13 @@ It aims to **deploy Trino in Kubernetes**, while relying on **object storage wit
 
 `TO-DO`
 
-## Architecture
+## Architecture we used
 
-`TO-DO`
+We used a Virtual Machine hosted in a friend's server, running Ubuntu 22.04. The specs are as follows:
+
+- CPU: 16 cores
+- RAM: 24 GB
+- Storage: 30 GB
 
 ## Contributors
 
