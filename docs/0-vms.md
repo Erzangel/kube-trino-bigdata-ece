@@ -29,6 +29,22 @@ sudo apt get update
 sudo apt install virtualbox
 ```
 
+### Using VirtualBox provider
+
+A Vagrantfile using either VirtualBox or libvirt will change when configuring the machines themselves.
+
+We have built our Vagrantfile by drawing inspiration from an existing Vagrantfile created by Luka Bigot in an Adaltas repository, [which can be found here](https://github.com/adaltas/demo-k8s-mini/blob/main/Vagrantfile).
+
+While the memory and CPU specifications are easy to specify, adding additional disks is trickier with VirtualBox and Vagrant. We have drawn direct inspiration to how it has been achieved in the above link, which is itself inspired by the solution provided in [this Adaltas article](https://www.adaltas.com/en/2019/09/09/rook-ceph-k8s/#the-solution).
+
+Care should be taken with the constraints of each provider. For example, VirtualBox only allows IP adresses in the `192.168.56.0/21` range for its VMs. We originally wished to use the `192.168.34.10` IP address for our master VM which corresponds to the private IP addresses range, but VirtualBox forbids it by default.
+
+Therefore, our machines use the following IP addresses:
+
+- `192.168.58.10` for the master,
+- `192.168.58.11`, `192.168.58.12`, `192.168.58.13` for the workers.
+
+
 ### Installing libvirt
 
 For `libvirt` to be used on a host, we must first verify that the KVM module is loaded and that our system supports it with `kvm-ok`.
