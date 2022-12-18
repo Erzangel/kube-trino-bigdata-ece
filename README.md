@@ -2,7 +2,9 @@
 
 ## About
 
-This repository holds the Big Data Ecosystem project of ECE Students Luka, Cléa & Mathias.
+This repository offers everything required to deploy a distributed data processing environment on Kubernetes over 4 virtual machines.
+
+It has been developed in the context of a project in the Big Data Ecosystem course of ECE Students Luka, Cléa & Mathias.
 
 It aims to **deploy Trino in Kubernetes**, while relying on **object storage with MinIO**.
 
