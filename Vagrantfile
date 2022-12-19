@@ -64,7 +64,7 @@ Vagrant.configure("2") do |config|
         vb.memory = host_specs[:memory]
 	vb.cpus = host_specs[:cpus]
         # Disk setting in VirtualBox, if there is a disk number indicated in specs
-	(0..host_specs[:disks]).each do |i|
+	(0...host_specs[:disks]).each do |i|
 	  vb.customize ["modifyvm", :id, "--ioapic", "on"]
           # Creating a virtual disk called "<VM-name>-disk-n" with a size of 30GB
           vb.customize ["createhd", "--filename", "#{host_name}-disk-#{i}", "--size", WORKER_DISK_SIZE * 1024]
