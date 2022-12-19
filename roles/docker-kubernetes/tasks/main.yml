@@ -1,0 +1,121 @@
+---
+# First step is fetching the IP address of the current node
+# to pass it to kubelet afterwards
+- name: Obtaining node_ip var from eth1 ipv4 address
+  set_fact:
+    node_ip: "{{ ansible_eth1.ipv4.address }}"
+
+# Let us install all prerequisites packages for Docker & kubeadm, kubelet, kubectl install
+- name: Installing prerequisites packages
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - ca-certificates
+    - curl
+    - gnupg
+    - lsb-release
+    - apt-transport-https
+    - unzip
+    
+# Because we use multiple VMs, the clocks may become unsynchronised
+# In a distributed storage context, this may be problematic (and generates errors in Rook for instance)
+# We install ntp and ntpdate in order to prevent this
+- name: Installing packages to sync clock between nodes
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - ntp
+    - ntpdate
+
+# Docker installation steps from the official documentation 
+- name: Adding the apt signing key for Docker repository
+  become: yes
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Adding apt repository for stable version of Docker
+  become: yes
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    state: present
+    
+- name: Installing Docker and its dependencies
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+
+# Because Docker and kubelet use different Cgroup drivers, we need to make them match
+# Docker uses Cgroupd by default, we tell it to use systemd instead
+- name: Setting Docker cgroup driver to systemd to match kubelet
+  become: yes
+  ansible.builtin.copy:
+    content: '{ "exec-opts": ["native.cgroupdriver=systemd"] }'
+    dest: /etc/docker/daemon.json
+    
+# Installing kubeadm, kubelet, kubectl
+- name: Adding the apt signing key for Kubernetes
+  become: yes
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Adding apt repository for Kubernetes
+  become: yes
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes.list
+
+# We insert the node IP address to Kubelet extra args
+# kubelet does not work properly without this step
+- name: Giving the node ip to kubelet extra args
+  become: yes
+  lineinfile:
+    path: /etc/default/kubelet
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
+    create: yes
+
+- name: Installing Kubernetes binaries
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - kubelet=1.23.*
+      - kubeadm=1.23.*
+      - kubectl=1.23.*
+      
+
+# As explained in the documentation, we enable the kubelet service and disable swap
+# so that the kubelet service can work properly
+- name: Enabling kubelet service
+  become: yes
+  command: "{{ item }}"
+  with_items:
+    - systemctl enable --now kubelet
+    
+- name: Disabling swap
+  become: yes
+  command: "{{ item }}"
+  with_items:
+    - swapoff -a
+    - sed -i '/ swap / s/^/#/' /etc/fstab
+  when: ansible_swaptotal_mb > 0

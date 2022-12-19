@@ -1,0 +1,4 @@
+- name: Installing Docker as a container runtime and kubeadm, kubectl, kubelet
+  hosts: all
+  roles:
+    - role: docker-kubernetes

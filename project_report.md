@@ -1,10 +1,10 @@
 # Lab Report
 
-Students:
-
-- Luka Bigot
-- Cléa Deduit
-- Mathias Sericola
+| Name              | Email                       |
+| ---------------- | --------------------------- |
+| Luka BIGOT       | luka.bigot@edu.ece.fr       |
+| Cléa DEDUIT      | clea.deduit@edu.ece.fr      |
+| Mathias SERICOLA | mathias.sericola@edu.ece.fr |
 
 ## Project description
 
