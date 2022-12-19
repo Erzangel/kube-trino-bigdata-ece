@@ -24,9 +24,9 @@
 
 # Memory in MB and amount of CPU cores 
 # for the master and worker nodes
-MASTER_MEMORY = 2048
+MASTER_MEMORY = 8192
 MASTER_CPUS = 4
-WORKER_MEMORY = 6144
+WORKER_MEMORY = 16384
 WORKER_CPUS = 4
 
 # Number of disks per worker node

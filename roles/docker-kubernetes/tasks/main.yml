@@ -60,6 +60,12 @@
     - docker-ce-cli
     - containerd.io
 
+- name: Adding Vagrant user to Docker group
+  become: yes
+  user:
+    name: vagrant
+    group: docker
+
 # Because Docker and kubelet use different Cgroup drivers, we need to make them match
 # Docker uses Cgroupd by default, we tell it to use systemd instead
 - name: Setting Docker cgroup driver to systemd to match kubelet
@@ -67,6 +73,16 @@
   ansible.builtin.copy:
     content: '{ "exec-opts": ["native.cgroupdriver=systemd"] }'
     dest: /etc/docker/daemon.json
+    
+# We make sure Docker services are up
+- name: Reloading Docker services
+  become: yes
+  command: "{{ item }}"
+  with_items:
+    - sudo systemctl daemon-reload
+    - sudo systemctl restart docker
+    - systemctl enable docker.service
+    - systemctl start docker.service
     
 # Installing kubeadm, kubelet, kubectl
 - name: Adding the apt signing key for Kubernetes
@@ -101,8 +117,7 @@
     packages:
       - kubelet=1.23.*
       - kubeadm=1.23.*
-      - kubectl=1.23.*
-      
+      - kubectl=1.23.* 
 
 # As explained in the documentation, we enable the kubelet service and disable swap
 # so that the kubelet service can work properly

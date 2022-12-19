@@ -1,0 +1,13 @@
+---
+# Download the manifest from the Calico website
+- name: Download Calico manifest
+  command: curl https://projectcalico.docs.tigera.io/manifests/calico.yaml -O
+
+# Tell Kubernetes to deploy it
+- name: Install calico
+  command: kubectl apply -f calico.yaml
+
+# Wait until all Calico pods to be functional before proceeding
+- name: Waiting for Calico pods init
+  command: kubectl rollout status deployment/calico-kube-controllers -n kube-system
+  ignore_errors: yes

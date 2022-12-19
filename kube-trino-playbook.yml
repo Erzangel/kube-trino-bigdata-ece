@@ -12,3 +12,8 @@
   hosts: kube-trino-worker-*
   roles:
     - role: kubeadm-join
+    
+- name: Deploy Calico CNI on the cluster
+  hosts: kube-trino-master
+  roles:
+    - role: kube-calico
