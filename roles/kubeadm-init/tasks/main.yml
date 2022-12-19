@@ -25,14 +25,6 @@
   become: yes
   command: kubeadm init --config kubeadm/kubeadm-config.yaml
   
-- name: Setting up kubeconfig for Vagrant user
-  become: yes
-  command: "{{ item }}"
-  with_items:
-   - mkdir -p /home/vagrant/.kube
-   - cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
-   - chown vagrant:vagrant /home/vagrant/.kube/config
-
 # Give the vagrant user Kubernetes permissions
 - name: Setting up kubeconfig for Vagrant user
   become: yes
