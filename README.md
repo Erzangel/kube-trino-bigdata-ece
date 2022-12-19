@@ -20,6 +20,8 @@ We used a Virtual Machine hosted in a friend's server, running Ubuntu 22.04. The
 - RAM: 24 GB
 - Storage: 30 GB
 
+We have previously attempted to run this project in a Linux Container (LXC) with the same specs, but the latter supported neither VirtualBox nor KVM/QEMU. We thus switched to a traditional VM, which supports VirtualBox.
+
 ## Documentation index
 
 We have documented all of our attempts for each part of the project, which we have divided and documented as follows:

@@ -4,10 +4,10 @@ Our cluster's creation is going to be automated. This goes from the **creating o
 
 In order to achieve this, two mains tools exist to create & subsequently provision VMs automatically:
 
-- Vagrant (TODO: Insert link)
+- [Vagrant](https://www.vagrantup.com/)
 - Terraform
 
-## Vagrant
+## What is Vagrant?
 
 Vagrant is a tool developed by Hashicorp. It is a popular and powerful Infrastructure as Code (IaC) tool.
 
@@ -22,18 +22,20 @@ Ideally, KVM & QEMU are preferred for their speed & proximity to the original ma
 We have tried to use libvirt, but because the host we are using for this projet does not support KVM, we use VirtualBox instead. Our steps for using libvirt are still documented.
 
 
-### Installing VirtualBox provider
+## Installing VirtualBox provider
 
 ```
 sudo apt get update
 sudo apt install virtualbox
 ```
 
-### Using VirtualBox provider
+## Using VirtualBox provider
 
 A Vagrantfile using either VirtualBox or libvirt will change when configuring the machines themselves.
 
 We have built our Vagrantfile by drawing inspiration from an existing Vagrantfile created by Luka Bigot in an Adaltas repository, [which can be found here](https://github.com/adaltas/demo-k8s-mini/blob/main/Vagrantfile).
+
+[Our Vagrantfile for this project can be found here in the repository](https://github.com/Erzangel/kube-trino-bigdata-ece/blob/main/Vagrantfile).
 
 While the memory and CPU specifications are easy to specify, adding additional disks is trickier with VirtualBox and Vagrant. We have drawn direct inspiration to how it has been achieved in the above link, which is itself inspired by the solution provided in [this Adaltas article](https://www.adaltas.com/en/2019/09/09/rook-ceph-k8s/#the-solution).
 
@@ -44,8 +46,13 @@ Therefore, our machines use the following IP addresses:
 - `192.168.58.10` for the master,
 - `192.168.58.11`, `192.168.58.12`, `192.168.58.13` for the workers.
 
+## Screenshots of VM creation
 
-### Installing libvirt
+Before creating VMs, let us run `vagrant status` to check if the Vagrantfile is parsed correctly and if any VM is currently up:
+
+![Screenshot](../img/0-1-vagrant-status-before.png)
+
+## (Optional) Using libvirt
 
 For `libvirt` to be used on a host, we must first verify that the KVM module is loaded and that our system supports it with `kvm-ok`.
 
@@ -61,7 +68,7 @@ We also need to install the vagrant-libvirt plugin for libvirt boxes support:
 vagrant plugin install vagrant-libvirt
 ```
 
-## Vagrantfile
+Here is an example of a libvirt Vagrantfile:
 
 ```
 Vagrant.configure("2") do |config|
