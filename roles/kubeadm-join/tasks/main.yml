@@ -1,0 +1,11 @@
+---
+# We import the join command from the host machine
+- name: Fetching the join command from host machine
+  copy:
+    src: /tmp/join-command.sh
+    dest: /tmp/
+    mode: 0777
+
+- name: Joining the node to cluster
+  become: yes
+  command: sh /tmp/join-command.sh

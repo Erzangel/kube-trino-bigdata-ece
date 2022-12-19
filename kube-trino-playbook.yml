@@ -2,3 +2,13 @@
   hosts: all
   roles:
     - role: docker-kubernetes
+    
+- name: Create Kubernetes cluster on master node with kubeadm
+  hosts: kube-trino-master
+  roles:
+    - role: kubeadm-init
+     
+- name: Join Kubernetes cluster on worker nodes with kubeadm
+  hosts: kube-trino-worker-*
+  roles:
+    - role: kubeadm-join

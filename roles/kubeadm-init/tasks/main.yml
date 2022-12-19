@@ -1,0 +1,41 @@
+---
+# We need to import a configuration file when we initiate the cluster
+# There is also the need to inject the node IP in the configuration file,
+# which we achieve with the `sed` command.
+# In the file, there is a ANSIBLE_NODE_IP value, which we replace in the third task
+- name: Ensuring /home/vagrant/kubeadm dir exists in master machine
+  file:
+    path: /home/vagrant/kubeadm
+    state: directory
+
+- name: Importing kubeadm-config.yaml manifest
+  copy:
+    src: config/kubeadm-config.yaml
+    dest: /home/vagrant/kubeadm
+
+- name: Injecting node ip in kubeadm config file
+  command: "sed -i 's/ANSIBLE_NODE_IP/{{ node_ip }}/' kubeadm/kubeadm-config.yaml"
+
+- name: Enable iptables for kube
+  become: yes
+  shell: echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+
+- name: Create cluster with kubeadm
+  become: yes
+  command: kubeadm init --config kubeadm/kubeadm-config.yaml
+  
+# We have now created the cluster, and we need to export the join command
+# so that the other machines can join the cluster
+# We achieve this by copying a temporary file to the host machine containing the join command
+- name: Generating join command
+  become: yes
+  command: kubeadm token create --print-join-command
+  register: join_command
+  
+- name: Saving join command to tmp file
+  shell: "echo {{ join_command.stdout_lines[0] }} > /tmp/join-command.sh"
+  
+- name: Exporting join command to host machine in tmp folder
+  fetch:
+    src: /tmp/join-command.sh
+    dest: /tmp/join-command.sh
