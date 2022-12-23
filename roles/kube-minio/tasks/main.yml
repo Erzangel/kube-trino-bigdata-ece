@@ -20,6 +20,7 @@
   become: yes
   become_user: vagrant
   shell: |
+    export PATH="${KREW_ROOT:-/home/vagrant/.krew}/bin:$PATH"
     kubectl krew install directpv
     kubectl directpv install
     
@@ -35,8 +36,9 @@
 - name: Formatting hard disks on worker nodes
   become: yes
   become_user: vagrant
-  command: kubectl directpv drives format --drives /dev/sd{b...f}
-
+  shell: | 
+    export PATH="${KREW_ROOT:-/home/vagrant/.krew}/bin:$PATH"
+    kubectl directpv drives format --drives /dev/sd{b...f}
 
 # Then we install MinIO itself through Helm
 ## Importing the values files
