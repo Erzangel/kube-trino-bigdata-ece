@@ -134,4 +134,3 @@
     - swapoff -a
     - sed -i '/ swap / s/^/#/' /etc/fstab
   when: ansible_swaptotal_mb > 0
-  warn: false

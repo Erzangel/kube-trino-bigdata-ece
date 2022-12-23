@@ -10,6 +10,8 @@
 
 `TODO`
 
+> Despite the commit history being slightly inconsistent, all commits have been done as a group and not by a single individual. **From start to finish, we have worked as a group**, and each member is aware of what has been done where, and for what purpose. The majority of commits from a single account is because we used a single SSH key to push/pull to and from GitHub inside the VM. We have tried to add co-authors as much as possible in the commit history regardless.
+
 ## How did we implement it?
 
 We have documented each step separately in the following files:
