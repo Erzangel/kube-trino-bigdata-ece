@@ -25,7 +25,6 @@
     kubectl directpv install
     
 - name: Wait for DirectPV pods to be deployed
-  become: yes
   command: kubectl wait --for=condition=ready --namespace direct-csi-min-io --timeout=400s --all pods
   
 - name: Wait for DirectPV to detect all disks
