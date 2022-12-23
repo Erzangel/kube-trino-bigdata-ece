@@ -81,3 +81,14 @@ Vagrant.configure("2") do |config|
   end
 end
 ```
+
+## Installing Ansible
+
+Because we are also going to want to automate further provisioning in the VMs we create with Vagrant, we also wish to install Ansible.
+
+Using a package manager, it is very simple:
+
+```
+sudo apt update
+sudo apt install ansible
+```
