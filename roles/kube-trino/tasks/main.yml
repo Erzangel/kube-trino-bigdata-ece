@@ -1,4 +1,4 @@
---
+---
 - name: Install Trino with Helm
   command: |
     helm repo add trino https://trinodb.github.io/charts
