@@ -17,3 +17,13 @@
   hosts: kube-trino-master
   roles:
     - role: kube-calico
+    
+- name: Deploy MinIO on the cluster
+  hosts: kube-trino-master
+  roles:
+    - role: kube-minio
+    
+- name: Deploy Trino on the cluster
+  hosts: kube-trino-master
+  roles:
+    - role: kube-trino

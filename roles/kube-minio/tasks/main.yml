@@ -1,0 +1,77 @@
+--
+# First, we format the disks with DirectPV installed through Krew
+
+## Installing Krew
+- name: Installing Krew plugin
+  shell: ( set -x; cd "$(mktemp -d)" && OS="$(uname | tr '[:upper:]' '[:lower:]')" && ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && KREW="krew-${OS}_${ARCH}" && curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" && tar zxvf "${KREW}.tar.gz" && ./"${KREW}" install krew )
+
+- name: Setting Krew in path of Vagrant shell
+  become: yes
+  become_user: vagrant
+  shell: export PATH="${KREW_ROOT:-/home/vagrant/.krew}/bin:$PATH"
+
+- name: Setting Krew in path of all users
+  become: yes
+  shell: echo PATH="${KREW_ROOT:-/home/vagrant/.krew}/bin:$PATH" > /etc/profile.d/krew.sh
+  
+## Installing DirectPV
+### Here, we use the become_user command to have access to Krew with Ansible
+- name: Installing DirectPV with Krew
+  become: yes
+  become_user: vagrant
+  shell: |
+    kubectl krew install directpv
+    kubectl directpv install
+    
+- name: Wait for DirectPV pods to be deployed
+  become: yes
+  command: kubectl wait --for=condition=ready --namespace direct-csi-min-io --timeout=400s --all pods
+  
+- name: Wait for DirectPV to detect all disks
+  pause:
+    seconds: 20
+
+## Actual drive formatting
+- name: Formatting hard disks on worker nodes
+  become: yes
+  become_user: vagrant
+  command: kubectl directpv drives format --drives /dev/sd{b...f}
+
+
+# Then we install MinIO itself through Helm
+## Importing the values files
+- name: Ensuring /home/vagrant/minio dir exists in master machine
+  file:
+    path: /home/vagrant/minio
+    state: directory
+
+- name: Importing operator values file
+  copy:
+    src: config/operator-values.yaml
+    dest: /home/vagrant/minio
+    
+- name: Importing tenant values file
+  copy:
+    src: config/tenant-values.yaml
+    dest: /home/vagrant/minio
+    
+## Installing Helm
+- name: Downloading Helm install script
+  command: curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+
+- name: Setting execute permissions on Helm install script
+  file:
+    path: /home/vagrant/get_helm.sh
+    mode: '0700'
+
+
+- name: Executing Helm install script
+  command: ./get_helm.sh
+ 
+- name: Deploy MinIO with Helm
+  command: |
+    helm repo add minio https://operator.min.io/
+    helm upgrade --install --namespace minio-operator --create-namespace minio-operator minio/operator --values operator-values.yaml
+    helm upgrade --install --namespace minio-tenant-1 --create-namespace minio-tenant-1 minio/tenant --values tenant-values.yaml
+
+# Optional here, wait for MinIO pods to be up

@@ -26,13 +26,22 @@
   command: kubeadm init --config kubeadm/kubeadm-config.yaml
   
 # Give the vagrant user Kubernetes permissions
-- name: Setting up kubeconfig for Vagrant user
+- name: Creating .kube folder
   become: yes
-  command: "{{ item }}"
-  with_items:
-   - mkdir -p /home/vagrant/.kube
-   - cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
-   - chown vagrant:vagrant /home/vagrant/.kube/config  
+  file:
+    path: /home/vagrant/.kube
+    state: directory
+
+
+- name: Setting up kubeconfig for Vagrant user
+  command: cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
+   
+- name: Setting owner & group as Vagrant for kubeconfig
+  become: yes
+  file:
+    path: /home/vagrant/.kube/config
+    owner: vagrant
+    group: vagrant
 
 # We have now created the cluster, and we need to export the join command
 # so that the other machines can join the cluster
