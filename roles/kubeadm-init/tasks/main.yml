@@ -34,6 +34,7 @@
 
 
 - name: Setting up kubeconfig for Vagrant user
+  become: yes
   command: cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
    
 - name: Setting owner & group as Vagrant for kubeconfig
