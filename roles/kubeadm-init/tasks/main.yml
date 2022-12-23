@@ -48,4 +48,5 @@
 - name: Exporting join command to host machine in tmp folder
   fetch:
     src: /tmp/join-command.sh
-    dest: /tmp/join-command.sh
+    dest: /tmp/
+    flat: yes

@@ -31,8 +31,8 @@ WORKER_CPUS = 4
 
 # Number of disks per worker node
 # and size of an individual disk in GB
-WORKER_DISKS_NB = 1
-WORKER_DISK_SIZE = 3
+WORKER_DISKS_NB = 2
+WORKER_DISK_SIZE = 10
 
 # VM image "box" name used by Vagrant
 VM_BOX_NAME = "bento/ubuntu-20.04"
@@ -45,6 +45,7 @@ cluster = {
   "kube-trino-worker-01" => { :ip => "192.168.58.11", :memory => WORKER_MEMORY, :cpus => WORKER_CPUS, :disks => WORKER_DISKS_NB },
   "kube-trino-worker-02" => { :ip => "192.168.58.12", :memory => WORKER_MEMORY, :cpus => WORKER_CPUS, :disks => WORKER_DISKS_NB },
   "kube-trino-worker-03" => { :ip => "192.168.58.13", :memory => WORKER_MEMORY, :cpus => WORKER_CPUS, :disks => WORKER_DISKS_NB },
+  "kube-trino-worker-04" => { :ip => "192.168.58.14", :memory => WORKER_MEMORY, :cpus => WORKER_CPUS, :disks => WORKER_DISKS_NB },
 }
 
 
