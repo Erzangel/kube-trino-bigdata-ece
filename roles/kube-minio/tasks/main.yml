@@ -69,10 +69,13 @@
 - name: Executing Helm install script
   command: ./get_helm.sh
  
-- name: Deploy MinIO with Helm
-  command: |
-    helm repo add minio https://operator.min.io/
-    helm upgrade --install --namespace minio-operator --create-namespace minio-operator minio/operator --values operator-values.yaml
-    helm upgrade --install --namespace minio-tenant-1 --create-namespace minio-tenant-1 minio/tenant --values tenant-values.yaml
+- name: Add MinIO Helm Repository to Helm
+  command: helm repo add minio https://operator.min.io/
+ 
+- name: Deploy MinIO Operator with Helm
+  shell: helm upgrade --install --namespace minio-operator --create-namespace minio-operator minio/operator --values minio/operator-values.yaml
+
+- name: Deploy MinIO Tenant with Helm
+  shell: helm upgrade --install --namespace minio-tenant-1 --create-namespace minio-tenant-1 minio/tenant --values minio/tenant-values.yaml
 
 # Optional here, wait for MinIO pods to be up
