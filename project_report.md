@@ -8,9 +8,16 @@
 
 ## Project description
 
-`TODO`
+Our goal for this project was to **deploy Trino on Kubernetes**, by following four main steps:
 
-> Despite the commit history being slightly inconsistent, all commits have been done as a group and not by a single individual. **From start to finish, we have worked as a group**, and each member is aware of what has been done where, and for what purpose. The majority of commits from a single account is because we used a single SSH key to push/pull to and from GitHub inside the VM. We have tried to add co-authors as much as possible in the commit history regardless.
+- Creating the Virtual Machines supporting the cluster ourselves, and automating all deployment;
+- Creating the cluster from scratch, through `kubeadm` and not through `minikube`, in a way that would be as close to a real production-grade cluster;
+- Deploying object storage to define a sink from where to consume data from (and Luka conveniently has experience with it!);
+- Deploying Trino on the cluster.
+
+All in all, this was mainly about **deploying a Kubernetes infrastructure** and **providing it with deployments enabling basic Data Analytics work**.
+
+> Despite the commit history being slightly uneven, all commits have been done as a group and not by a single individual. **From start to finish, we have worked as a group**, and each member is aware of what has been done where, and for what purpose. The majority of commits from a single account is because we used a single SSH key to push/pull to and from GitHub inside the VM. We have tried to add co-authors as much as possible in the commit history regardless.
 
 ## Disclaimer about the host machine we used
 
@@ -31,6 +38,8 @@ We have documented each step separately in the following files:
 2. [Deploying basic Kubernetes services (CNI)](./docs/2-basic-kubernetes-services.md)
 3. [Deploying MinIO to provide object storage](./docs/3-minio-object-storage.md)
 4. [Deploying Trino to perform distributed computation](./docs/4-trino-processing.md)
+
+Be sure to check out each documentation file linked just above, as it contains extensive notes about our understanding of each technology! It also contains the steps we performed to implement a given step.
 
 ## List of problems encountered
 
