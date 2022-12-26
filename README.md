@@ -10,15 +10,18 @@ It aims to **deploy Trino in Kubernetes**, while relying on **object storage wit
 
 ## Usage
 
-`TO-DO`
+1. Adjust the machine's resources in the `Vagrantfile` to match your own host computer's limitations. (Bear in mind that 6 GB per worker should be seen as a minimum, and that MinIO requires at least 4 hard disks to function)
+2. Clone this repository
+3. Install Vagrant, VirtualBox, Ansible on your host machine
+4. Run `vagrant up` in the root of the repository
 
 ## Architecture we used
 
 We used a Virtual Machine hosted in a friend's server, running Ubuntu 22.04. The specs are as follows:
 
 - CPU: 16 cores
-- RAM: 24 GB
-- Storage: 30 GB
+- RAM: 94 GB
+- Storage: 256 GB
 
 We have previously attempted to run this project in a Linux Container (LXC) with the same specs, but the latter supported neither VirtualBox nor KVM/QEMU. We thus switched to a traditional VM, which supports VirtualBox.
 
@@ -27,10 +30,10 @@ We have previously attempted to run this project in a Linux Container (LXC) with
 We have documented all of our attempts for each part of the project, which we have divided and documented as follows:
 
 0. [Creating & provisioning VMs with Vagrant](./docs/0-vms.md)
-1. Deploying Kubernetes with kubeadm, kubelet, kubectl
-2. Deploying basic Kubernetes services (load balancer, Ingress)
-3. Deploying MinIO to provide object storage
-4. Deploying Trino to perform distributed computation
+1. [Deploying Kubernetes with kubeadm, kubelet, kubectl](./docs/1-deploying-kubernetes.md)
+2. [Deploying basic Kubernetes services (CNI)](./docs/2-basic-kubernetes-services.md)
+3. [Deploying MinIO to provide object storage](./docs/3-minio-object-storage.md)
+4. [Deploying Trino to perform distributed computation](./docs/4-trino-processing.md)
 
 ## Contributors
 
