@@ -25,11 +25,11 @@
     kubectl directpv install
     
 - name: Wait for DirectPV pods to be deployed
-  command: kubectl wait --for=condition=ready --namespace direct-csi-min-io --timeout=400s --all pods
+  command: kubectl wait --for=condition=ready --namespace direct-csi-min-io --timeout=600s --all pods
   
-- name: Wait for DirectPV to detect all disks
+- name: Wait for DirectPV to detect all disks (40 seconds)
   pause:
-    seconds: 20
+    seconds: 40
 
 ## Actual drive formatting
 - name: Formatting hard disks on worker nodes
