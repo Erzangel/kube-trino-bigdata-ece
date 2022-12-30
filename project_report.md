@@ -19,6 +19,17 @@ All in all, this was mainly about **deploying a Kubernetes infrastructure** and 
 
 > Despite the commit history being slightly uneven, all commits have been done as a group and not by a single individual. **From start to finish, we have worked as a group**, and each member is aware of what has been done where, and for what purpose. The majority of commits from a single account is because we used a single SSH key to push/pull to and from GitHub inside the VM. We have tried to add co-authors as much as possible in the commit history regardless.
 
+## Short summary of what we have tried and done
+
+- We created VMs with Vagrant and automated their provisioning with Ansible;
+- We deployed Kubernetes on those VMs in 1 day;
+- We deployed MinIO and Trino in the cluster. Trino worked fine, but MinIO was difficult to set up;
+- We have figured out multiple ways to debug a Kubernetes cluster, as described in the [section describing issues we ran into](#list-of-problems-encountered). In particular, it includes how to debug a Kubernetes cluster.
+
+Because we spent a lot of time fixing the MinIO deployment, and despite wishing to cover an example use case with Trino, we have not been able to.
+
+However, creating the cluster in itself was already a big ordeal, and we are proud to have made **our own Kubernetes cluster for Data Analytics** using the production-grade tool `kubeadm`.
+
 ## Disclaimer about the host machine we used
 
 As described in the `README.md`, for our host machine running the cluster of VMs, we used a VM with **very high specs** rented on a server of a friend of Luka Bigot.
@@ -45,6 +56,8 @@ Be sure to check out each documentation file linked just above, as it contains e
 
 Here is a list of the major problems we have encountered during the project, and how we solved them.
 
+**Most of those issues were related to object storage with MinIO** Resolving them has been the most time-consuming part of the project, and we have given this **more priority**, as having a fully-functional distributed system is an objective we set ourselves.
+
 ### MinIO needs more than 4 hard disks in the cluster to work
 
 We encountered an issue where we tried to set up MinIO using 3 nodes with 1 disk each. However, in order for MinIO to work (and specifically for Erasure-coding to be effective), we need **at least 4 hard disks in the cluster** as indicated in this [serverfault.com discussion](https://serverfault.com/questions/978644/deploy-minio-distributed-on-3-nodes-with-1-drive).
@@ -55,6 +68,48 @@ Two solutions are thus possible:
 - Or add one more worker node
 
 Because we could afford the disk space and the RAM, we decided to apply both solutions: MinIO recommends 4 nodes for high-availability, and more volumes helps MinIO be more efficient as well.
+
+### MinIO tenant pods are created, but are pending/crashing
+
+We encountered multiple issues while trying to deploy the MinIO tenants using the MinIO Operator.
+
+At first, we used Helm in order to deploy both the MinIO Operator and MinIO tenant. However, when deploying the tenant:
+
+- All pods were in a pending state;
+- PVCs existed, but no PV were provided through the `directpv-min-io` StorageClass provided by DirectPV.
+
+We have tried to modify the tenant deployment without finding a fix.
+
+In order to debug this, we have used another approach to deploy MinIO Operator and tenant altogether, with Krew:
+
+```
+kubectl krew install minio
+kubectl minio init
+kubectl minio tenant create miniotenant --capacity 30Gi --servers 4 --volumes 8 --namespace minio --storage-class directpv-min-io
+```
+
+With this approach, we have obtained a different result: this time, the MinIO tenant pods were crashing instead of pending. PVs were provided by DirectPV.
+
+![Image describing the cluster state as described above](./img/issue-minio-krew.png)
+
+We have thus tried to investigate what happened in those crashing pods. A question thus arised: **how do we check the logs for what happened during this crash in Kubernetes?**
+
+Here are useful commands to debug the cluster that we have used:
+
+```
+kubectl get events -n <namespace>
+kubectl describe pod -n <namespace> <name-of-pod>
+```
+
+In this case, the containers themselves were crashing and no event were giving any detail. What we instead did was SSH to one of the nodes where a pod was deployed and checked the container log inside `/var/log/containers/`. For the above error, we have found the following error:
+
+```
+{"log":"ERROR Unable to validate passed arguments in MINIO_ARGS:env+tls://j1tu3D5iKzQ8JdzBEalh:gc0ESQtVgTj9QYIyFmCnl4kV4PvKzNPG4sQFxVlW@operator.minio-operator.svc.cluster.local:4222/webhook/v1/getenv/minio/miniotenant: Get \"https://operator.minio-operator.svc.cluster.local:4222/webhook/v1/getenv/minio/miniotenant?key=MINIO_ARGS\": dial tcp 82.66.189.11:4222: i/o timeout\n","stream":"stdout","time":"2022-12-30T14:16:54.131896526Z"}
+```
+
+What is odd is that the container tried to reach `82.66.189.11:4222`, which corresponds to none of the services found when using `kubectl get service -A` (in the below screenshot, Trino was not deployed):
+
+![List of services in the cluster](./img/issue-services.png)
 
 ## Links used to fix issues
 
