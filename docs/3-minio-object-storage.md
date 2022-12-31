@@ -57,3 +57,5 @@ In particular, we need to specify how many servers we want, and how many hard di
 In order to achieve this easily, we have our own modified versions of the values file in this repository.
 
 [Those values file can be found here](../config/) under the names `operator-values.yaml` and `tenant-values.yaml`.
+
+[To 4. Processing with Trino](4-trino-processing.md)

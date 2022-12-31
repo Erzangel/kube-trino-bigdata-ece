@@ -5,7 +5,7 @@ Our cluster's creation is going to be automated. This goes from the **creating o
 In order to achieve this, two mains tools exist to create & subsequently provision VMs automatically:
 
 - [Vagrant](https://www.vagrantup.com/)
-- Terraform
+- [Terraform](https://www.terraform.io/)
 
 We have chosen to use Vagrant, a tool we were familiar with.
 
@@ -62,7 +62,7 @@ Then, we run `vagrant up`. The machines start creating themselves. This process 
 
 Finally, once the process is done, our VMs are running in the background. We can observe that this is the case with another `vagrant status`:
 
-![Screenshot of the vagrant status after creating VMs, displaying each VM is running](../img/0-2-vagrant-status-after.png)
+![Screenshot of the vagrant status after creating VMs, displaying each VM is running](../img/0-3-vagrant-status-after.png)
 
 ## (Optional) Using libvirt
 
@@ -104,3 +104,5 @@ Using a package manager, it is very simple:
 sudo apt update
 sudo apt install ansible
 ```
+
+[To 1. Deploying Kubernetes](1-deploying-kubernetes.md)
