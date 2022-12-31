@@ -19,6 +19,10 @@ kubectl rollout status deployment/calico-kube-controllers -n kube-system
 
 And as per usual, since we work in an IaC approach, we create a role to run all of those commands after the cluster has been created.
 
+After deploying the CNI, the nodes in the cluster are considered ready, as seen by running `kubectl get nodes`:
+
+![Screenshot of the nodes state, all ready](../img/2-1-nodes-ready.png)
+
 During this step, it would have been possible to install an Ingress controller in the cluster, or to take care of certificate-related matters. However, because this is a test cluster and because we want to deploy MinIO and Trino on Kubernetes in a simple & quick way, we choose not to.
 
 [To 3. MinIO Object Storage](3-minio-object-storage.md)

@@ -27,7 +27,9 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
 
-As we use an IaC approach in our project, we are going to automate all of those steps as tasks in an Ansible role. Said role can be found [here](). TODO: Insert link
+## Using Ansible roles
+
+As we use an IaC approach in our project, we are going to automate all of those steps as tasks in an Ansible role. Said role [can be found here](../roles/docker-kubernetes/tasks/main.yml).
 
 Note: The commands described above can be run with Ansible using the `command` or `shell` module. However, as described in [this article](https://www.ansiblepilot.com/articles/ansible-modules-command-vs-shell/), it is preferred to use built-in Ansible modules when possible.
 
@@ -64,6 +66,12 @@ In the same way, when we install packages, we use the `apt` module:
     - lsb-release
     - apt-transport-https
 ```
+
+When we run `vagrant up`, the Vagrantfile defines that Ansible is called when the last machine is created, for all machines, running each task in parallel for all machines.
+
+Here is a screenshot of the Ansible provisioning starting:
+
+![Screenshot of the Ansible provisioning process](../img/1-1-ansible-start.png)
 
 ## Installing kubeadm, kubelet, kubectl
 

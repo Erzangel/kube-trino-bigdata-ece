@@ -11,6 +11,14 @@ As per the article, the steps are:
 1. Formatting disks with DirectPV,
 2. Installing MinIO through the MinIO Operator and Helm
 
+## Issues encountered
+
+We have encountered multiple issues while deploying MinIO.
+
+**As of now, the MinIO deployment is not fully functional**. We have tried our best to fix it, but lacked time.
+
+Details on the issues encountered [can be found in the project report](../project_report.md#list-of-problems-encountered).
+
 ## Formatting disks with DirectPV
 
 Before installing MinIO itself, the disks on the worker nodes must be prepared & formatted.

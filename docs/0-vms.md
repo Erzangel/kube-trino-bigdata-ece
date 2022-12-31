@@ -7,22 +7,26 @@ In order to achieve this, two mains tools exist to create & subsequently provisi
 - [Vagrant](https://www.vagrantup.com/)
 - Terraform
 
+We have chosen to use Vagrant, a tool we were familiar with.
+
 ## What is Vagrant?
 
-Vagrant is a tool developed by Hashicorp. It is a popular and powerful Infrastructure as Code (IaC) tool.
+Vagrant is a tool developed by [Hashicorp](https://www.hashicorp.com/). It is a popular and powerful Infrastructure as Code (IaC) tool.
 
 Vagrant is able to create VMs using different virtualization providers. Some providers include:
 
-- VirtualBox
-- VMware
+- [VirtualBox](https://www.virtualbox.org/)
+- [VMware](https://www.vmware.com/)
 - KVM & QEMU
 
-Ideally, KVM & QEMU are preferred for their speed & proximity to the original machine's kernel.
+Ideally, the KVM & QEMU technologies are preferred for their speed & proximity to the original machine's kernel.
 
-We have tried to use libvirt, but because the host we are using for this projet does not support KVM, we use VirtualBox instead. Our steps for using libvirt are still documented.
+We have tried to use libvirt, but because the host we are using for this projet does not support KVM, we used VirtualBox instead. Our steps for using libvirt are still documented below.
 
 
 ## Installing VirtualBox provider
+
+On the host-machine, assuming a Debian host, run the following commands:
 
 ```
 sudo apt get update
@@ -50,7 +54,15 @@ Therefore, our machines use the following IP addresses:
 
 Before creating VMs, let us run `vagrant status` to check if the Vagrantfile is parsed correctly and if any VM is currently up:
 
-![Screenshot](../img/0-1-vagrant-status-before.png)
+![Screenshot of the vagrant status before creating VMs, showing no machines are created](../img/0-1-vagrant-status-before.png)
+
+Then, we run `vagrant up`. The machines start creating themselves. This process usually takes a little while with VirtualBox:
+
+![Screenshot of the vagrant up command being run](../img/0-2-vagrant-up.png)
+
+Finally, once the process is done, our VMs are running in the background. We can observe that this is the case with another `vagrant status`:
+
+![Screenshot of the vagrant status after creating VMs, displaying each VM is running](../img/0-2-vagrant-status-after.png)
 
 ## (Optional) Using libvirt
 
