@@ -1,10 +1,12 @@
-# Lab Report
+# Project Report
 
 | Name              | Email                       |
 | ---------------- | --------------------------- |
 | Luka BIGOT       | luka.bigot@edu.ece.fr       |
 | Cléa DEDUIT      | clea.deduit@edu.ece.fr      |
 | Mathias SERICOLA | mathias.sericola@edu.ece.fr |
+
+This file contains additional information about the steps we followed & the problems we encountered.
 
 ## Project description
 

@@ -2,7 +2,7 @@
 
 ## About
 
-This repository offers everything required to deploy a distributed data processing environment on Kubernetes over 4 virtual machines.
+This repository offers everything required to deploy a **distributed data processing environment on Kubernetes over 4 virtual machines**.
 
 It has been developed in the context of a project in the Big Data Ecosystem course of ECE Students Luka, Cléa & Mathias.
 
@@ -10,7 +10,7 @@ It aims to **deploy Trino in Kubernetes**, while relying on **object storage wit
 
 ## Usage
 
-1. Adjust the machine's resources in the `Vagrantfile` to match your own host computer's limitations. (Bear in mind that 6 GB per worker should be seen as a minimum, and that MinIO requires at least 4 hard disks to function)
+1. Adjust the machine's resources in the `Vagrantfile` to match your own host computer's limitations. (A worker node ideally needs 6 GB of RAM, and MinIO requires at least 4 hard disks to function)
 2. Clone this repository
 3. Install Vagrant, VirtualBox, Ansible on your host machine
 4. Run `vagrant up` in the root of the repository
@@ -24,6 +24,10 @@ We used a Virtual Machine hosted in a friend's server, running Ubuntu 22.04. The
 - Storage: 256 GB
 
 We have previously attempted to run this project in a Linux Container (LXC) with the same specs, but the latter supported neither VirtualBox nor KVM/QEMU. We thus switched to a traditional VM, which supports VirtualBox.
+
+## Project report
+
+We have created [a dedicated projet report for our evaluation at ECE](./project_report.md).
 
 ## Documentation index
 
